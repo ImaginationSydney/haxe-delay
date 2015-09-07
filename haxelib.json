@@ -1,0 +1,12 @@
+{
+	"name": "delay",
+	"url": "https://github.com/ImaginationSydney/haxe-delay",
+	"license": "MIT",
+	"tags": [ "delay", "flash", "html5", "cpp", "callback" ],
+	"description": "delay callback until nextframe, byFrames or byTime",
+	"version": "1.0.0",
+	"releasenote": "initial commit",
+	"contributors": [ "p.j.shand" ],
+	"dependencies": {
+	}
+}
