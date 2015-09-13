@@ -42,10 +42,15 @@ class DelayObject
 	private var frameCount:Int = 0;
 	private var frames:Int;
 	private var timer:Timer;
+	private var precision:Bool;
+	private var end:Float = -1;
+	private var offset:Int = 1;
 	
 	public function new():Void
 	{
-		
+		#if debug
+			offset = 2;
+		#end
 	}
 	
 	public function nextFrame(clearObject:Dynamic, callback:Dynamic, params:Array<Dynamic>=null):Void 
@@ -63,23 +68,60 @@ class DelayObject
 		Update(null);
 	}
 	
-	public function byTime(time:Float, clearObject:Dynamic, callback:Dynamic, params:Array<Dynamic>, units:Int = 1):Void 
+	public function byTime(time:Float, clearObject:Dynamic, callback:Dynamic, params:Array<Dynamic>, units:Int = 1, precision:Bool=false):Void 
 	{
 		this.clearObject = clearObject;
 		this.params = params;
 		this.callback = callback;
+		this.precision = precision;
 		
 		if (units >= 1) time *= 1000;
 		if (units >= 2) time *= 60;
 		if (units >= 3) time *= 60;
 		if (units >= 4) time *= 24;
 		
+		if (precision) {
+			end = Date.now().getTime() + time - offset;
+			time -= Math.ceil(1000 / 30);
+			if (time < 0) time = 0;
+		}
+		
 		timer = new Timer(time, 1);
 		timer.addEventListener(TimerEvent.TIMER_COMPLETE, OnTimerComplete);
 		timer.start();
 	}
 	
+	public function block(milliseconds:Float, clearObject:Dynamic, callback:Dynamic, params:Array<Dynamic>):Void 
+	{
+		this.clearObject = clearObject;
+		this.params = params;
+		this.callback = callback;
+		if (end == -1) end = Date.now().getTime() + milliseconds - offset;
+		var now:Float = Date.now().getTime();
+		while (now < end)
+		{
+			now = Date.now().getTime();
+		}
+		complete();
+	}
+	
 	private function OnTimerComplete(e:TimerEvent):Void 
+	{
+		if (precision) {
+			if (Date.now().getTime() < end) {
+				var dif:Float = end - Date.now().getTime();
+				trace("dif = " + dif);
+				trace("now = " + Date.now().getTime());
+				block(dif, clearObject, callback, params);
+				return;
+			}
+			//while (Date.now().getTime() < end) { }
+		}
+		
+		complete();
+	}
+	
+	private function complete():Void
 	{
 		if (callback != null) {
 			fireCallback(callback, params);

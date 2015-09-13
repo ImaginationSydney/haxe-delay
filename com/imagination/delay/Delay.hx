@@ -55,11 +55,18 @@ class Delay
 		delayObject.by(frames, clearObject, callback, params);
 	}
 	
-	public static function byTime(time:Float, callback:Dynamic, params:Array<Dynamic>=null, units:Int=1):Void 
+	public static function byTime(time:Float, callback:Dynamic, params:Array<Dynamic>=null, units:Int=1, precision:Bool=false):Void 
 	{
 		var delayObject:DelayObject = new DelayObject();
 		delayObjects.push(delayObject);
-		delayObject.byTime(time, clearObject, callback, params, units);
+		delayObject.byTime(time, clearObject, callback, params, units, precision);
+	}
+	
+	public static function block(time:Float, callback:Dynamic, params:Array<Dynamic>=null):Void 
+	{
+		var delayObject:DelayObject = new DelayObject();
+		delayObjects.push(delayObject);
+		delayObject.block(time, clearObject, callback, params);
 	}
 	
 	private static function clearObject(delayObject:DelayObject):Void 
