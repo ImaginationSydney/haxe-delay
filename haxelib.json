@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": [ "delay", "flash", "html5", "cpp", "callback" ],
 	"description": "delay callback until nextframe, byFrames or byTime",
-	"version": "1.0.1",
-	"releasenote": "block and precision added",
+	"version": "1.1.0",
+	"releasenote": "openfl dependency removed",
 	"contributors": [ "p.j.shand" ],
 	"dependencies": {
 	}

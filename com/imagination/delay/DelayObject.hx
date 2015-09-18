@@ -22,11 +22,7 @@ THE SOFTWARE.*/
 
 package com.imagination.delay;
 
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.events.TimerEvent;
-import flash.utils.Timer;
-import openfl.Lib;
+import haxe.Timer;
 
 /**
  * ...
@@ -64,8 +60,8 @@ class DelayObject
 		this.clearObject = clearObject;
 		this.params = params;
 		this.callback = callback;
-		Lib.current.stage.addEventListener(Event.ENTER_FRAME, Update);
-		Update(null);
+		
+		EnterFrame.add(onEnterFrame);
 	}
 	
 	public function byTime(time:Float, clearObject:Dynamic, callback:Dynamic, params:Array<Dynamic>, units:Int = 1, precision:Bool=false):Void 
@@ -86,9 +82,7 @@ class DelayObject
 			if (time < 0) time = 0;
 		}
 		
-		timer = new Timer(time, 1);
-		timer.addEventListener(TimerEvent.TIMER_COMPLETE, OnTimerComplete);
-		timer.start();
+		Timer.delay(OnTimerComplete, Std.int(time));
 	}
 	
 	public function block(milliseconds:Float, clearObject:Dynamic, callback:Dynamic, params:Array<Dynamic>):Void 
@@ -105,7 +99,7 @@ class DelayObject
 		complete();
 	}
 	
-	private function OnTimerComplete(e:TimerEvent):Void 
+	private function OnTimerComplete():Void 
 	{
 		if (precision) {
 			if (Date.now().getTime() < end) {
@@ -130,7 +124,7 @@ class DelayObject
 		dispose();
 	}
 	
-	private function Update(e:Event):Void 
+	private function onEnterFrame(delta:Int):Void 
 	{
 		if (frames == frameCount) {
 			if (callback != null) {
@@ -179,7 +173,6 @@ class DelayObject
 	
 	public function dispose():Void
 	{
-		Lib.current.stage.removeEventListener(Event.ENTER_FRAME, Update);
 		if (timer != null) {
 			timer.stop();
 			timer = null;
