@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
 
 package com.imagination.delay;
+import haxe.Constraints.Function;
 
 /**
  * ...
@@ -43,26 +44,26 @@ class Delay
 	
 	public function new() { }
 	
-	public static function nextFrame(callback:Dynamic, params:Array<Dynamic>=null):Void
+	public static function nextFrame(callback:Function, params:Array<Dynamic>=null):Void
 	{
 		Delay.byFrames(1, callback, params);
 	}
 	
-	public static function byFrames(frames:Int, callback:Dynamic, params:Array<Dynamic>=null):Void 
+	public static function byFrames(frames:Int, callback:Function, params:Array<Dynamic>=null):Void 
 	{
 		var delayObject:DelayObject = new DelayObject();
 		delayObjects.push(delayObject);
 		delayObject.by(frames, clearObject, callback, params);
 	}
 	
-	public static function byTime(time:Float, callback:Dynamic, params:Array<Dynamic>=null, units:Int=1, precision:Bool=false):Void 
+	public static function byTime(time:Float, callback:Function, params:Array<Dynamic>=null, units:Int=1, precision:Bool=false):Void 
 	{
 		var delayObject:DelayObject = new DelayObject();
 		delayObjects.push(delayObject);
 		delayObject.byTime(time, clearObject, callback, params, units, precision);
 	}
 	
-	public static function block(time:Float, callback:Dynamic, params:Array<Dynamic>=null):Void 
+	public static function block(time:Float, callback:Function, params:Array<Dynamic>=null):Void 
 	{
 		var delayObject:DelayObject = new DelayObject();
 		delayObjects.push(delayObject);
@@ -83,7 +84,7 @@ class Delay
 		}
 	}
 	
-	public static function killDelay(callback:Dynamic):Void 
+	public static function killDelay(callback:Function):Void 
 	{
 		if (delayObjects == null) return;
 		for (i in 0...delayObjects.length) 

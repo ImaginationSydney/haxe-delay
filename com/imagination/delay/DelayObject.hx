@@ -22,6 +22,7 @@ THE SOFTWARE.*/
 
 package com.imagination.delay;
 
+import haxe.Constraints.Function;
 import haxe.Timer;
 
 /**
@@ -31,9 +32,9 @@ import haxe.Timer;
 
 class DelayObject
 {
-	public var callback:Dynamic;
+	public var callback:Function;
 	private var params:Array<Dynamic>;
-	private var clearObject:Dynamic;
+	private var clearObject:DelayObject->Void;
 	
 	private var frameCount:Int = 0;
 	private var frames:Int;
@@ -49,12 +50,12 @@ class DelayObject
 		#end
 	}
 	
-	public function nextFrame(clearObject:Dynamic, callback:Dynamic, params:Array<Dynamic>=null):Void 
+	public function nextFrame(clearObject:DelayObject->Void, callback:Function, params:Array<Dynamic>=null):Void 
 	{
 		by(1, clearObject, callback, params);
 	}
 	
-	public function by(frames:Int, clearObject:Dynamic, callback:Dynamic, params:Array<Dynamic>=null):Void 
+	public function by(frames:Int, clearObject:DelayObject->Void, callback:Function, params:Array<Dynamic>=null):Void 
 	{
 		this.frames = frames;
 		this.clearObject = clearObject;
@@ -64,7 +65,7 @@ class DelayObject
 		EnterFrame.add(onEnterFrame);
 	}
 	
-	public function byTime(time:Float, clearObject:Dynamic, callback:Dynamic, params:Array<Dynamic>, units:Int = 1, precision:Bool=false):Void 
+	public function byTime(time:Float, clearObject:DelayObject->Void, callback:Function, params:Array<Dynamic>, units:Int = 1, precision:Bool=false):Void 
 	{
 		this.clearObject = clearObject;
 		this.params = params;
@@ -85,7 +86,7 @@ class DelayObject
 		Timer.delay(OnTimerComplete, Std.int(time));
 	}
 	
-	public function block(milliseconds:Float, clearObject:Dynamic, callback:Dynamic, params:Array<Dynamic>):Void 
+	public function block(milliseconds:Float, clearObject:DelayObject->Void, callback:Function, params:Array<Dynamic>):Void 
 	{
 		this.clearObject = clearObject;
 		this.params = params;
@@ -137,7 +138,7 @@ class DelayObject
 		frameCount++;
 	}
 	
-	private function fireCallback(callback:Dynamic, params:Array<Dynamic>=null) 
+	private function fireCallback(callback:Function, params:Array<Dynamic>=null) 
 	{
 		if (params == null) {
 			callback();
