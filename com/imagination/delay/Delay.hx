@@ -87,9 +87,9 @@ class Delay
 	public static function killDelay(callback:Function):Void 
 	{
 		if (delayObjects == null) return;
-		for (i in 0...delayObjects.length) 
+		for (i in 0...delayObjects.length-1) 
 		{
-			var j = delayObjects.length - i;
+			var j = delayObjects.length - i - 1;
 			if (delayObjects[j].callback == callback) {
 				delayObjects[j].dispose();
 				delayObjects[j] = null;
