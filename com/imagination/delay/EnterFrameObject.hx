@@ -20,7 +20,6 @@ class EnterFrameObject
 	public function start():Void
 	{
 		running = true;
-		//OnTick();
 	}
 	
 	public function stop():Void
@@ -30,8 +29,6 @@ class EnterFrameObject
 	
 	public function tick() 
 	{
-		//if (!running) return;
 		if (running) callback(0);
-		//Timer.delay(OnTick, Std.int(1000 / Application.current.frameRate));
 	}
 }

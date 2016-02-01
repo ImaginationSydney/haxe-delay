@@ -105,8 +105,6 @@ class DelayObject
 		if (precision) {
 			if (Date.now().getTime() < end) {
 				var dif:Float = end - Date.now().getTime();
-				trace("dif = " + dif);
-				trace("now = " + Date.now().getTime());
 				block(dif, clearObject, callback, params);
 				return;
 			}
