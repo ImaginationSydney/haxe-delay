@@ -30,10 +30,10 @@ class EnterFrame
 	
 	static public function add(callback:Int->Void):Void 
 	{
+		started = true;
 		var enterFrameObject:EnterFrameObject = new EnterFrameObject(callback);
 		enterFrameObject.start();
 		enterFrameObjects.push(enterFrameObject);
-		started = true;
 	}
 	
 	static public function remove(callback:Int->Void):Void 
@@ -57,7 +57,8 @@ class EnterFrame
 	private static function set_started(value:Bool):Bool
 	{
 		if (_started == value) return value;
-		if (value) OnTick();
-		return _started = value;
+		_started = value;
+		if (_started) OnTick();
+		return _started;
 	}
 }
