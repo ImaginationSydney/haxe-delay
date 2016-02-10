@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": [ "delay", "flash", "html5", "cpp", "callback" ],
 	"description": "delay callback until nextframe, byFrames or byTime",
-	"version": "1.1.4",
-	"releasenote": "Timer.delay moved into global delay scope",
+	"version": "1.1.5",
+	"releasenote": "Remove double mapping per callback",
 	"contributors": [ "p.j.shand" ],
 	"dependencies": {
 	}
