@@ -28,7 +28,7 @@ class EnterFrame
 	{
 		for (i in 0...enterFrameObjects.length) 
 		{
-			enterFrameObjects[i].tick();
+			enterFrameObjects[i].tick(cast 1000 / Application.current.frameRate); // passing fake delta
 		}
 		
 		#if (!flash)
@@ -50,13 +50,12 @@ class EnterFrame
 	static public function addAt(callback:Int->Void, index:Int):Void 
 	{
 		if (enterFrameObjects.length > index) {
-			var newEnterFrameObjects = new Array<EnterFrameObject>();	
-			for (i in 0...enterFrameObjects.length) 
-			{
-				if (i == index) enterFrameObjects.push(new EnterFrameObject(callback));
-				newEnterFrameObjects.push(enterFrameObjects[i]);
+			var enterFrameObject:EnterFrameObject = getEnterFrameObject(callback);
+			if (enterFrameObject == null) {
+				enterFrameObject = new EnterFrameObject(callback);
+				enterFrameObjects.insert(index, enterFrameObject);
 			}
-			enterFrameObjects = newEnterFrameObjects;
+			enterFrameObject.start();
 		}
 		else {
 			add(callback);
@@ -65,7 +64,8 @@ class EnterFrame
 	
 	static public function remove(callback:Int->Void):Void 
 	{
-		for (i in 0...enterFrameObjects.length) 
+		var i:Int = enterFrameObjects.length - 1;
+		while (i >= 0) 
 		{
 			if (enterFrameObjects[i].callback == callback) {
 				var enterFrameObject:EnterFrameObject = enterFrameObjects[i];
@@ -73,6 +73,7 @@ class EnterFrame
 				enterFrameObject = null;
 				enterFrameObjects.splice(i, 1);
 			}
+			i--;
 		}
 		if (enterFrameObjects.length == 0) running = false;
 	}

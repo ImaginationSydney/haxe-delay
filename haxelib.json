@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": [ "delay", "flash", "html5", "cpp", "callback" ],
 	"description": "delay callback until nextframe, byFrames or byTime",
-	"version": "1.1.5",
-	"releasenote": "Remove double mapping per callback",
+	"version": "1.1.6",
+	"releasenote": "bug fixes",
 	"contributors": [ "p.j.shand" ],
 	"dependencies": {
 	}
