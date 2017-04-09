@@ -49,11 +49,19 @@ class EnterFrame
 	
 	static public function addAt(callback:Int->Void, index:Int):Void 
 	{
+		var currentEnterFrameObject:EnterFrameObject = getEnterFrameObject(callback);
+		if (currentEnterFrameObject != null) {
+			remove(callback);
+		}
 		if (enterFrameObjects.length > index) {
-			var newEnterFrameObjects = new Array<EnterFrameObject>();	
+			var newEnterFrameObjects = new Array<EnterFrameObject>();
 			for (i in 0...enterFrameObjects.length) 
 			{
-				if (i == index) enterFrameObjects.push(new EnterFrameObject(callback));
+				if (i == index) {
+					var enterFrameObject:EnterFrameObject = new EnterFrameObject(callback);
+					newEnterFrameObjects.push(enterFrameObject);
+					enterFrameObject.start();
+				}
 				newEnterFrameObjects.push(enterFrameObjects[i]);
 			}
 			enterFrameObjects = newEnterFrameObjects;
