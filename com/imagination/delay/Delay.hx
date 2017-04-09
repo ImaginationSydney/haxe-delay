@@ -72,28 +72,29 @@ class Delay
 	
 	private static function clearObject(delayObject:DelayObject):Void 
 	{
-		var len:Int = delayObjects.length;
-		for (i in 0...delayObjects.length) 
+		var i:Int = delayObjects.length - 1;
+		while (i >= 0) 
 		{
-			var j:Int = len - i - 1;
-			if (delayObjects[j] == delayObject) {
+			if (delayObjects[i] == delayObject) {
 				delayObject.dispose();
 				delayObject = null;
-				delayObjects.splice(j, 1);
+				delayObjects.splice(i, 1);
 			}
+			i--;
 		}
 	}
 	
 	public static function killDelay(callback:Function):Void 
 	{
 		if (delayObjects == null) return;
-		for (i in 0...delayObjects.length-1) 
-		{
-			var j = delayObjects.length - i - 1;
-			if (delayObjects[j].callback == callback) {
-				delayObjects[j].dispose();
-				delayObjects[j] = null;
-				delayObjects.splice(j, 1);
+		var i = 0;
+		while (i < delayObjects.length){
+			var delayObject = delayObjects[i];
+			if (delayObject.callback == callback) {
+				delayObject.dispose();
+				delayObjects.splice(i, 1);
+			}else{
+				i++;
 			}
 		}
 	}

@@ -27,8 +27,8 @@ class EnterFrameObject
 		running = false;
 	}
 	
-	public function tick() 
+	public function tick(delta:Int) 
 	{
-		if (running) callback(0);
+		if (running) callback(delta);
 	}
 }
