@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": [ "delay", "flash", "html5", "cpp", "callback" ],
 	"description": "delay callback until nextframe, byFrames or byTime",
-	"version": "1.1.6",
-	"releasenote": "bug fixes",
+	"version": "1.1.7",
+	"releasenote": "Fix Enterframe AddAt function",
 	"contributors": [ "p.j.shand" ],
 	"dependencies": {
 	}
