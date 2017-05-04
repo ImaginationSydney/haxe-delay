@@ -27,10 +27,12 @@ class EnterFrame
 	private static function OnTick():Void
 	{
 		var i = 0;
+		var frameDelta = (cast 1000 / Application.current.frameRate); // passing fake delta
+		
 		while (i < enterFrameObjects.length) 
 		{
 			var enterFrameObject = enterFrameObjects[i];
-			enterFrameObject.tick(cast 1000 / Application.current.frameRate); // passing fake delta
+			enterFrameObject.tick(frameDelta);
 			
 			if (enterFrameObject == enterFrameObjects[i]){
 				i++;
