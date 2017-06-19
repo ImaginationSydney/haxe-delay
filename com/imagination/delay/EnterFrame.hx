@@ -7,6 +7,9 @@ import lime.app.Application;
 #if flash
 import flash.Lib;
 import flash.events.Event;
+#elseif openfl
+import openfl.Lib;
+import openfl.events.Event;
 #end
 /**
  * ...
@@ -44,7 +47,7 @@ class EnterFrame
 			}
 		}
 		
-		#if (!flash)
+		#if (!flash && !openfl)
 			if (running) Timer.delay(OnTick, Std.int(1000 / Application.current.frameRate));
 		#end
 	}
@@ -121,21 +124,21 @@ class EnterFrame
 		if (_running == value) return value;
 		_running = value;
 		if (_running) {
-			#if flash
+			#if (flash || openfl)
 				Lib.current.stage.addEventListener(Event.ENTER_FRAME, Update);
 			#else
 				OnTick();
 			#end
 		}
 		else {
-			#if flash
+			#if (flash || openfl)
 				Lib.current.stage.removeEventListener(Event.ENTER_FRAME, Update);
 			#end
 		}
 		return _running;
 	}
 	
-	#if flash
+	#if (flash || openfl)
 	static private function Update(e:Event):Void 
 	{
 		OnTick();
