@@ -14,10 +14,17 @@ import flash.events.Event;
  */
 class EnterFrame
 {
-	private static var enterFrameObjects = new Array<EnterFrameObject>();
-	//private static var enterFrameObjects = new ObjectMap<Dynamic, EnterFrameObject>();
+	private static var enterFrameObjects:Array<EnterFrameObject>;
 	private static var _running:Bool = false;
 	private static var running(get, set):Bool;
+	
+	private static var i:Int;
+	static private var framerate:Float = 60;
+	
+	static function __init__()
+	{
+		enterFrameObjects = new Array<EnterFrameObject>();
+	}
 	
 	public function new() 
 	{
@@ -26,13 +33,15 @@ class EnterFrame
 	
 	private static function OnTick():Void
 	{
-		for (i in 0...enterFrameObjects.length) 
+		i = enterFrameObjects.length - 1;
+		while (i >= 0) 
 		{
-			enterFrameObjects[i].tick(cast 1000 / Application.current.frameRate); // passing fake delta
+			enterFrameObjects[i].tick(cast 1000 / framerate); // passing fake delta
+			i--;
 		}
 		
 		#if (!flash)
-			if (running) Timer.delay(OnTick, Std.int(1000 / Application.current.frameRate));
+			if (running) Timer.delay(OnTick, Std.int(1000 / framerate));
 		#end
 	}
 	
@@ -99,6 +108,9 @@ class EnterFrame
 		if (_running == value) return value;
 		_running = value;
 		if (_running) {
+			if (Application.current != null) {
+				framerate = Application.current.frameRate;
+			}
 			#if flash
 				Lib.current.stage.addEventListener(Event.ENTER_FRAME, Update);
 			#else
@@ -114,7 +126,7 @@ class EnterFrame
 	}
 	
 	#if flash
-	static private function Update(e:Event):Void 
+	static inline private function Update(e:Event):Void 
 	{
 		OnTick();
 	}

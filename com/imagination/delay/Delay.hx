@@ -53,21 +53,21 @@ class Delay
 	{
 		var delayObject:DelayObject = new DelayObject();
 		delayObjects.push(delayObject);
-		delayObject.by(frames, clearObject, callback, params);
+		delayObject.by(frames, callback, params);
 	}
 	
 	public static function byTime(time:Float, callback:Function, params:Array<Dynamic>=null, units:Int=1, precision:Bool=false):Void 
 	{
 		var delayObject:DelayObject = new DelayObject();
 		delayObjects.push(delayObject);
-		delayObject.byTime(time, clearObject, callback, params, units, precision);
+		delayObject.byTime(time, callback, params, units, precision);
 	}
 	
 	public static function block(time:Float, callback:Function, params:Array<Dynamic>=null):Void 
 	{
 		var delayObject:DelayObject = new DelayObject();
 		delayObjects.push(delayObject);
-		delayObject.block(time, clearObject, callback, params);
+		delayObject.block(time, callback, params);
 	}
 	
 	private static function clearObject(delayObject:DelayObject):Void 

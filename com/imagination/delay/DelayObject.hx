@@ -29,12 +29,11 @@ import haxe.Timer;
  * ...
  * @author P.J.Shand
  */
-
+@:access(com.imagination.delay.Delay)
 class DelayObject
 {
 	public var callback:Function;
 	private var params:Array<Dynamic>;
-	private var clearObject:DelayObject->Void;
 	
 	private var frameCount:Int = 0;
 	private var frames:Int;
@@ -42,32 +41,34 @@ class DelayObject
 	private var precision:Bool;
 	private var end:Float = -1;
 	private var offset:Int = 1;
+	private static var count:Int = 0;
+	private var id:Int = 0;
+	var disposed:Bool;
 	
 	public function new():Void
 	{
 		#if debug
 			offset = 2;
 		#end
+		id = count++;
 	}
 	
-	public function nextFrame(clearObject:DelayObject->Void, callback:Function, params:Array<Dynamic>=null):Void 
+	public function nextFrame(callback:Function, params:Array<Dynamic>=null):Void 
 	{
-		by(1, clearObject, callback, params);
+		by(1, callback, params);
 	}
 	
-	public function by(frames:Int, clearObject:DelayObject->Void, callback:Function, params:Array<Dynamic>=null):Void 
+	public function by(frames:Int, callback:Function, params:Array<Dynamic>=null):Void 
 	{
 		this.frames = frames;
-		this.clearObject = clearObject;
 		this.params = params;
 		this.callback = callback;
 		
 		EnterFrame.add(onEnterFrame);
 	}
 	
-	public function byTime(time:Float, clearObject:DelayObject->Void, callback:Function, params:Array<Dynamic>, units:Int = 1, precision:Bool=false):Void 
+	public function byTime(time:Float, callback:Function, params:Array<Dynamic>, units:Int = 1, precision:Bool=false):Void 
 	{
-		this.clearObject = clearObject;
 		this.params = params;
 		this.callback = callback;
 		this.precision = precision;
@@ -86,9 +87,8 @@ class DelayObject
 		Timer.delay(OnTimerComplete, Std.int(time));
 	}
 	
-	public function block(milliseconds:Float, clearObject:DelayObject->Void, callback:Function, params:Array<Dynamic>):Void 
+	public function block(milliseconds:Float, callback:Function, params:Array<Dynamic>):Void 
 	{
-		this.clearObject = clearObject;
 		this.params = params;
 		this.callback = callback;
 		if (end == -1) end = Date.now().getTime() + milliseconds - offset;
@@ -102,10 +102,11 @@ class DelayObject
 	
 	private function OnTimerComplete():Void 
 	{
+		if (disposed) return;
 		if (precision) {
 			if (Date.now().getTime() < end) {
 				var dif:Float = end - Date.now().getTime();
-				block(dif, clearObject, callback, params);
+				block(dif, callback, params);
 				return;
 			}
 			//while (Date.now().getTime() < end) { }
@@ -116,28 +117,31 @@ class DelayObject
 	
 	private function complete():Void
 	{
+		if (disposed) return;
 		if (callback != null) {
 			fireCallback(callback, params);
 		}
-		if (clearObject != null) clearObject(this);
+		Delay.clearObject(this);
 		dispose();
 	}
 	
 	private function onEnterFrame(delta:Int):Void 
 	{
 		if (frames == frameCount) {
+			EnterFrame.remove(onEnterFrame);
 			if (callback != null) {
 				fireCallback(callback, params);
 			}
-			if (clearObject != null) clearObject(this);
+			Delay.clearObject(this);
 			dispose();
-			return;
 		}
 		frameCount++;
 	}
 	
 	private function fireCallback(callback:Function, params:Array<Dynamic>=null) 
 	{
+		if (disposed) return;
+		
 		if (params == null) {
 			callback();
 			return;
@@ -172,12 +176,13 @@ class DelayObject
 	
 	public function dispose():Void
 	{
+		EnterFrame.remove(onEnterFrame);
 		if (timer != null) {
 			timer.stop();
 			timer = null;
 		}
 		callback = null;
 		params = null;
-		clearObject = null;
+		disposed = true;
 	}
 }
